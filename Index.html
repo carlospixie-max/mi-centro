@@ -1,0 +1,1415 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Centro de Programas</title>
+    <!-- Versión 3.6 - Tooltips funcionales -->
+    <style>
+        /* ===== RESET Y CONFIGURACIÓN BASE ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            line-height: 1.6;
+            background: #f0f2f5;
+            color: #333;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        /* ===== CONTENEDOR PRINCIPAL ===== */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        /* ===== ENCABEZADO ===== */
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            animation: fadeInDown 0.8s ease-out;
+        }
+        
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        h1 {
+            color: #2c3e50;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            color: #7f8c8d;
+            font-size: 1.2em;
+        }
+        
+        /* ===== SISTEMA GRID DE CATEGORÍAS ===== */
+        .categories-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+        }
+        
+        /* ===== ESTRUCTURA DE CATEGORÍA ===== */
+        .category {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border-left: 5px solid #3498db;
+            
+            /* ESTRUCTURA FLEX PARA SCROLL INTERNO */
+            display: flex;
+            flex-direction: column;
+            height: 300px;
+            overflow: hidden;
+            
+            /* ANIMACIÓN DE ENTRADA */
+            animation: fadeInUp 0.5s ease-out forwards;
+            opacity: 0;
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .category:nth-child(1) { animation-delay: 0.1s; border-left-color: #e74c3c; }
+        .category:nth-child(2) { animation-delay: 0.2s; border-left-color: #9b59b6; }
+        .category:nth-child(3) { animation-delay: 0.3s; border-left-color: #3498db; }
+        .category:nth-child(4) { animation-delay: 0.4s; border-left-color: #1abc9c; }
+        .category:nth-child(5) { animation-delay: 0.5s; border-left-color: #f39c12; }
+        .category:nth-child(6) { animation-delay: 0.6s; border-left-color: #d35400; }
+        .category:nth-child(7) { animation-delay: 0.7s; border-left-color: #c0392b; }
+        .category:nth-child(8) { animation-delay: 0.8s; border-left-color: #16a085; }
+        .category:nth-child(9) { animation-delay: 0.9s; border-left-color: #8e44ad; }
+        .category:nth-child(10) { animation-delay: 1.0s; border-left-color: #2c3e50; }
+        .category:nth-child(11) { animation-delay: 1.1s; border-left-color: #7f8c8d; }
+        .category:nth-child(12) { animation-delay: 1.2s; border-left-color: #27ae60; }
+        .category:nth-child(13) { animation-delay: 1.3s; border-left-color: #e67e22; }
+        .category:nth-child(14) { animation-delay: 1.4s; border-left-color: #95a5a6; }
+        .category:nth-child(15) { animation-delay: 0.1s; border-left-color: #e74c3c; }
+        .category:nth-child(16) { animation-delay: 0.2s; border-left-color: #9b59b6; }
+        .category:nth-child(17) { animation-delay: 0.3s; border-left-color: #3498db; }
+        .category:nth-child(18) { animation-delay: 0.4s; border-left-color: #1abc9c; }
+        .category:nth-child(19) { animation-delay: 0.5s; border-left-color: #f39c12; }
+        .category:nth-child(20) { animation-delay: 0.6s; border-left-color: #d35400; }
+        
+        /* ===== EFECTO HOVER EN CATEGORÍAS ===== */
+        .category:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+        }
+        
+        /* ===== TÍTULO DE CATEGORÍA ===== */
+        .category h2 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-size: 1.4em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-shrink: 0;
+            position: relative;
+            z-index: 1;
+        }
+        
+        /* ===== CONTENEDOR DE SCROLL ===== */
+        .category-scroll {
+            flex: 1;
+            overflow-y: auto;
+            padding-right: 15px;
+            padding-top: 10px;
+            position: relative;
+        }
+        
+        /* ===== SCROLLBAR PERSONALIZADA ===== */
+        .category-scroll::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        .category-scroll::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 4px;
+            margin: 5px 0;
+        }
+        
+        .category-scroll::-webkit-scrollbar-thumb {
+            background: #3498db;
+            border-radius: 4px;
+        }
+        
+        .category-scroll::-webkit-scrollbar-thumb:hover {
+            background: #2980b9;
+        }
+        
+        .category-scroll {
+            scrollbar-width: thin;
+            scrollbar-color: #3498db #f1f1f1;
+        }
+        
+        /* ===== LISTA Y ELEMENTOS ===== */
+        .category ul {
+            list-style: none;
+        }
+        
+        .category li {
+            padding: 8px 12px;
+            margin: 5px 0;
+            background: #f8f9fa;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            border-left: 3px solid transparent;
+            display: flex;
+            align-items: center;
+            position: relative;
+            cursor: pointer;
+        }
+        
+        .category li:hover {
+            background: #e3f2fd;
+            border-left-color: #3498db;
+            transform: translateX(5px);
+        }
+        
+        /* ===== FAVICONS ===== */
+        .favicon {
+            width: 16px;
+            height: 16px;
+            margin-right: 12px;
+            border-radius: 3px;
+            flex-shrink: 0;
+            object-fit: contain;
+        }
+        
+        /* ===== ENLACES ===== */
+        .category a {
+            text-decoration: none;
+            color: #2c3e50;
+            font-weight: 600;
+            flex: 1;
+        }
+        
+        .category a:hover {
+            color: #3498db;
+        }
+        
+        /* ===== PIE DE PÁGINA ===== */
+        footer {
+            text-align: center;
+            margin-top: 50px;
+            color: #6b7280;
+            opacity: 0.7;
+            font-size: 0.9rem;
+        }
+        
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            .categories-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            h1 {
+                font-size: 2em;
+            }
+            
+            .category {
+                height: 280px;
+                padding: 20px;
+            }
+            
+            /* AQUÍ - este es el tooltip responsive que mencionaste */
+            .tooltip {
+                font-size: 0.7rem;
+                padding: 4px 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+           
+        <footer>
+            <p>✨ Centro de Programas Profesional - Versión 3.4 con Favicons</p>
+        </footer>
+    </div>
+
+    <!-- AQUÍ VA EL TOOLTIP GLOBAL - PEGA ESTO JUSTO AQUÍ -->
+    <div id="global-tooltip" style="
+        position: fixed;
+        background: #2c3e50;
+        color: white;
+        padding: 6px 12px;
+        border-radius: 6px;
+        font-size: 0.8rem;
+        z-index: 99999;
+        pointer-events: none;
+        opacity: 0;
+        transition: opacity 0.2s;
+        box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+    "></div>
+
+    <script>
+    // AQUÍ VA EL SCRIPT - PEGA ESTO JUSTO DESPUÉS
+    document.addEventListener('DOMContentLoaded', function() {
+        const tooltip = document.getElementById('global-tooltip');
+        const items = document.querySelectorAll('.category li');
+        
+        items.forEach(item => {
+            item.addEventListener('mouseenter', function(e) {
+                // Obtener el texto del enlace
+                const link = this.querySelector('a');
+                if (!link) return;
+                
+                const text = link.textContent.trim();
+                
+                // Posicionar el tooltip
+                const rect = this.getBoundingClientRect();
+                tooltip.textContent = text;
+                tooltip.style.left = (rect.left + rect.width/2) + 'px';
+                tooltip.style.top = (rect.top - 40) + 'px';
+                tooltip.style.opacity = '1';
+                tooltip.style.transform = 'translateX(-50%)';
+            });
+            
+            item.addEventListener('mouseleave', function() {
+                tooltip.style.opacity = '0';
+            });
+        });
+    });
+    </script>
+</body>
+</html>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🚀 Mi Centro de Programas</h1>
+            <p class="subtitle">Todas mis herramientas y aplicaciones categorizadas</p>
+        </header>
+        
+        <div class="categories-grid">
+        
+        
+        <!-- ⭐ MÁS USADOS -->
+            <div class="category">
+                <h2>⭐ Más usados</h2>
+                <div class="category-scroll">
+                    <ul>
+		        <li data-tooltip="Real Academia Española">
+                            <img src="https://www.google.com/s2/favicons?domain=rae.es&sz=32" alt="RAE" class="favicon">
+                            <a href="https://dle.rae.es/" target="_blank">Real Academia Española</a>
+                        </li>
+                        <li data-tooltip="Google Translate">
+                            <img src="https://www.google.com/s2/favicons?domain=google.com&sz=32" alt="Google Translate" class="favicon">
+                            <a href="https://translate.google.com" target="_blank">Google Translate</a>
+                        </li>
+                        <li data-tooltip="YouTube">
+                            <img src="https://www.google.com/s2/favicons?domain=youtube.com&sz=32" alt="YouTube" class="favicon">
+                            <a href="https://www.youtube.com/" target="_blank">Youtube</a>
+                        </li>
+                        <li data-tooltip="Asistente de IA conversacional">
+                            <img src="https://www.google.com/s2/favicons?domain=deepseek.com&sz=32" alt="DeepSeek" class="favicon">
+                            <a href="https://chat.deepseek.com/a/chat/s/825e9fc6-f310-4087-8669-b612cadf82bc" target="_blank">DeepSeek</a>
+                        </li>
+                        <li data-tooltip="Gmail">
+                            <img src="https://www.google.com/s2/favicons?domain=gmail.com&sz=32" alt="Gmail" class="favicon">
+                            <a href="https://gmail.com" target="_blank">Gmail</a>
+                        </li>
+                        <li data-tooltip="Yahoo">
+                            <img src="https://www.google.com/s2/favicons?domain=yahoo.com&sz=32" alt="Yahoo" class="favicon">
+                            <a href="https://mail.yahoo.com/d/folders/1" target="_blank">Yahoo</a>
+                        </li>
+                        <li data-tooltip="WhatsApp">
+                            <img src="https://www.google.com/s2/favicons?domain=whatsapp.com&sz=32" alt="WhatsApp" class="favicon">
+                            <a href="https://web.whatsapp.com" target="_blank">WhatsApp</a>
+                        </li>
+                        <li data-tooltip="CRM">
+                            <img src="https://www.google.com/s2/favicons?domain=notion.so&sz=32" alt="CRM" class="favicon">
+                            <a href="https://www.notion.so/d3809aa530834686a973d435532c2254?v=7b8bea04f0c54728b1ecb18e0eb8ae89&pvs=4" target="_blank">CRM</a>
+                        </li>
+                        <li data-tooltip="Asistente de IA conversacional">
+                            <img src="https://www.google.com/s2/favicons?domain=deepseek.com&sz=32" alt="DeepSeek" class="favicon">
+                            <a href="https://chat.deepseek.com/a/chat/s/825e9fc6-f310-4087-8669-b612cadf82bc" target="_blank">DeepSeek</a>
+                        </li>
+
+                    </ul>
+                </div>
+            </div>
+        
+        
+            <!-- 🎬 MEDIOS Y ENTRETENIMIENTO -->
+            <div class="category">
+                <h2>🎬 Medios y Entretenimiento</h2>
+                <div class="category-scroll">
+                    <ul>
+                        <li data-tooltip="YouTube">
+                            <img src="https://www.google.com/s2/favicons?domain=youtube.com&sz=32" alt="YouTube" class="favicon">
+                            <a href="https://www.youtube.com/" target="_blank">Youtube</a>
+                        </li>
+                       	<li data-tooltip="YouTube Music">
+                            <img src="https://www.google.com/s2/favicons?domain=music.youtube.com&sz=32" alt="YouTube Music" class="favicon">
+                            <a href="https://music.youtube.com/" target="_blank">Youtube Music</a>
+                        </li>
+                        <li data-tooltip="Ibiza Global Radio">
+                            <img src="https://www.google.com/s2/favicons?domain=ibizaglobalradio.com&sz=32" alt="Ibiza Radio" class="favicon">
+                            <a href="https://ibizaglobalradio.com/" target="_blank">Ibiza Global Radio</a>
+                        </li>
+                        <li data-tooltip="Twitch">
+                            <img src="https://www.google.com/s2/favicons?domain=twitch.tv&sz=32" alt="Twitch" class="favicon">
+                            <a href="https://www.twitch.tv/" target="_blank">Twitch</a>
+                        </li>
+                        <li data-tooltip="Odysee">
+                            <img src="https://www.google.com/s2/favicons?domain=odysee.com&sz=32" alt="Odysee" class="favicon">
+                            <a href="https://odysee.com/" target="_blank">Odysee</a>
+                        </li>
+                        <li data-tooltip="TVE">
+                            <img src="https://www.google.com/s2/favicons?domain=rtve.es&sz=32" alt="TVE" class="favicon">
+                            <a href="https://www.rtve.es/play/tve/" target="_blank">TVE</a>
+                        </li>
+                        <li data-tooltip="La 2">
+                            <img src="https://www.google.com/s2/favicons?domain=rtve.es&sz=32" alt="La 2" class="favicon">
+                            <a href="https://www.rtve.es/play/la-2/" target="_blank">La 2</a>
+                        </li>
+                        <li data-tooltip="Telecinco">
+                            <img src="https://www.google.com/s2/favicons?domain=mitele.es&sz=32" alt="Telecinco" class="favicon">
+                            <a href="https://www.mitele.es/" target="_blank">Telecinco</a>
+                        </li>
+                        <li data-tooltip="Antena 3">
+                            <img src="https://www.google.com/s2/favicons?domain=atresplayer.com&sz=32" alt="Antena 3" class="favicon">
+                            <a href="https://www.atresplayer.com/" target="_blank">Antena 3</a>
+                        </li>
+                        <li data-tooltip="Teledeporte TVE">
+                            <img src="https://www.google.com/s2/favicons?domain=rtve.es&sz=32" alt="Teledeporte" class="favicon">
+                            <a href="https://www.rtve.es/play/teledeporte/" target="_blank">Teledeporte TVE</a>
+                        </li>
+                        <li data-tooltip="Cuatro">
+                            <img src="https://www.google.com/s2/favicons?domain=mitele.es&sz=32" alt="Cuatro" class="favicon">
+                            <a href="https://www.mitele.es/" target="_blank">Cuatro</a>
+                        </li>
+                        <li data-tooltip="Negocios TV">
+                            <img src="https://www.google.com/s2/favicons?domain=negociostv.es&sz=32" alt="Negocios TV" class="favicon">
+                            <a href="https://www.negociostv.es/" target="_blank">negocios TV</a>
+                        </li>
+                        <li data-tooltip="TVE 24 horas">
+                            <img src="https://www.google.com/s2/favicons?domain=rtve.es&sz=32" alt="TVE 24h" class="favicon">
+                            <a href="https://www.rtve.es/play/24-horas/" target="_blank">TVE 24 horas</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- 💬 COMUNICACIÓN Y REDES SOCIALES -->
+            <div class="category">
+                <h2>💬 Comunicación y Redes Sociales</h2>
+                <div class="category-scroll">
+                    <ul>
+                	<li data-tooltip="Google Meet">
+                            <img src="https://www.google.com/s2/favicons?domain=meet.google.com&sz=32" alt="Google Meet" class="favicon">
+                            <a href="https://meet.google.com/landing" target="_blank">Google Meet</a>
+                        </li>
+                        <li data-tooltip="WhatsApp">
+                            <img src="https://www.google.com/s2/favicons?domain=whatsapp.com&sz=32" alt="WhatsApp" class="favicon">
+                            <a href="https://web.whatsapp.com" target="_blank">WhatsApp</a>
+                        </li>
+                        <li data-tooltip="Telegram">
+                            <img src="https://www.google.com/s2/favicons?domain=telegram.org&sz=32" alt="Telegram" class="favicon">
+                            <a href="https://web.telegram.org" target="_blank">Telegram</a>
+                        </li>
+                        <li data-tooltip="LinkedIn">
+                            <img src="https://www.google.com/s2/favicons?domain=linkedin.com&sz=32" alt="LinkedIn" class="favicon">
+                            <a href="https://linkedin.com" target="_blank">LinkedIn</a>
+                        </li>
+                        </li>
+                        <li data-tooltip="Reedit. red social de comunidades sobre cualquier tema imaginable">
+                            <img src="https://www.google.com/s2/favicons?domain=reddit.com/&sz=32" alt="Reedit" class="favicon">
+                            <a href="https://www.reddit.com/" target="_blank">Reedit</a>
+                        </li>                                                                        
+                        <li data-tooltip="Facebook">
+                            <img src="https://www.google.com/s2/favicons?domain=facebook.com&sz=32" alt="Facebook" class="favicon">
+                            <a href="https://facebook.com" target="_blank">Facebook</a>
+                        </li>
+                        <li data-tooltip="Instagram">
+                            <img src="https://www.google.com/s2/favicons?domain=instagram.com&sz=32" alt="Instagram" class="favicon">
+                            <a href="https://instagram.com" target="_blank">Instagram</a>
+                        </li>
+                        <li data-tooltip="Meetup">
+                            <img src="https://www.google.com/s2/favicons?domain=meetup.com&sz=32" alt="Meetup" class="favicon">
+                            <a href="https://meetup.com" target="_blank">Meetup</a>
+
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- 📧 CORREO ELECTRÓNICO -->
+            <div class="category">
+                <h2>📧 Correo Electrónico</h2>
+                <div class="category-scroll">
+                    <ul>
+                        <li data-tooltip="Gmail">
+                            <img src="https://www.google.com/s2/favicons?domain=gmail.com&sz=32" alt="Gmail" class="favicon">
+                            <a href="https://gmail.com" target="_blank">Gmail</a>
+                        </li>
+                        <li data-tooltip="Yahoo">
+                            <img src="https://www.google.com/s2/favicons?domain=yahoo.com&sz=32" alt="Yahoo" class="favicon">
+                            <a href="https://mail.yahoo.com/d/folders/1" target="_blank">Yahoo</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- 🗣️ IDIOMAS Y TRADUCCIÓN -->
+            <div class="category">
+                <h2>🗣️ Idiomas y Traducción</h2>
+                <div class="category-scroll">
+                    <ul>
+                        <li data-tooltip="Real Academia Española">
+                            <img src="https://www.google.com/s2/favicons?domain=rae.es&sz=32" alt="RAE" class="favicon">
+                            <a href="https://dle.rae.es/" target="_blank">Real Academia Española</a>
+                        </li>
+                        <li data-tooltip="Google Translate">
+                            <img src="https://www.google.com/s2/favicons?domain=google.com&sz=32" alt="Google Translate" class="favicon">
+                            <a href="https://translate.google.com" target="_blank">Google Translate</a>
+                        </li>
+                        <li data-tooltip="Sinónimos online">
+                            <img src="https://www.google.com/s2/favicons?domain=sinonimosonline.com&sz=32" alt="Sinónimos" class="favicon">
+                            <a href="https://www.sinonimosonline.com/" target="_blank">Sinónimos online</a>
+                        </li>
+                        <li data-tooltip="Consejos sobre el uso correcto del español">
+                            <img src="https://www.google.com/s2/favicons?domain=fundeu.es&sz=32" alt="Fundeu" class="favicon">
+                            <a href="https://www.fundeu.es/" target="_blank">Fundeu</a>
+                        </li>
+                        <li data-tooltip="Collins Dictionary">
+                            <img src="https://www.google.com/s2/favicons?domain=collinsdictionary.com&sz=32" alt="Collins" class="favicon">
+                            <a href="https://www.collinsdictionary.com/" target="_blank">Collins Dictionary</a>
+                        </li>
+                        <li data-tooltip="Corrector gramatical y de estilo multilingüe">
+                            <img src="https://www.google.com/s2/favicons?domain=languagetool.org&sz=32" alt="LanguageTool" class="favicon">
+                            <a href="https://languagetool.org" target="_blank">Language Tool</a>
+                        </li>
+                        <li data-tooltip="Italki">
+                            <img src="https://www.google.com/s2/favicons?domain=italki.com&sz=32" alt="Italki" class="favicon">
+                            <a href="https://www.italki.com" target="_blank">Italki</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- 📁 ALMACENAMIENTO Y DOCUMENTOS -->
+            <div class="category">
+                <h2>📁 Almacenamiento y Documentos</h2>
+                <div class="category-scroll">
+                    <ul>
+                        <li data-tooltip="Google Drive">
+                            <img src="https://www.google.com/s2/favicons?domain=drive.google.com&sz=32" alt="Drive" class="favicon">
+                            <a href="https://drive.google.com" target="_blank">Google Drive</a>
+                        </li>
+                        <li data-tooltip="Google Docs">
+                            <img src="https://www.google.com/s2/favicons?domain=docs.google.com&sz=32" alt="Docs" class="favicon">
+                            <a href="https://docs.google.com" target="_blank">Google Docs</a>
+                        </li>
+                        <li data-tooltip="Sheets">
+                            <img src="https://www.google.com/s2/favicons?domain=sheets.google.com&sz=32" alt="Sheets" class="favicon">
+                            <a href="https://sheets.google.com" target="_blank">Sheets</a>
+                        </li>
+                        <li data-tooltip="Google Keep">
+                            <img src="https://www.google.com/s2/favicons?domain=keep.google.com&sz=32" alt="Keep" class="favicon">
+                            <a href="https://keep.google.com" target="_blank">Google Keep</a>
+                        </li>
+                        <li data-tooltip="Sites">
+                            <img src="https://www.google.com/s2/favicons?domain=sites.google.com&sz=32" alt="Sites" class="favicon">
+                            <a href="https://sites.google.com" target="_blank">Sites</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- 🛠️ PRODUCTIVIDAD Y COLABORACIÓN -->
+            <div class="category">
+                <h2>🛠️ Productividad y Colaboración</h2>
+                <div class="category-scroll">
+                    <ul>
+                        <li data-tooltip="Notion">
+                            <img src="https://www.google.com/s2/favicons?domain=notion.so&sz=32" alt="Notion" class="favicon">
+                            <a href="https://notion.so" target="_blank">Notion</a>
+                        </li>                        
+                        <li data-tooltip="Editor de diseño de interfaces y prototipado">
+                            <img src="https://www.google.com/s2/favicons?domain=figma.com&sz=32" alt="Figma" class="favicon">
+                            <a href="https://figma.com" target="_blank">Figma</a>
+                        </li>
+                        <li data-tooltip="Gestor de tareas y proyectos con tableros">
+                            <img src="https://www.google.com/s2/favicons?domain=trello.com&sz=32" alt="Trello" class="favicon">
+                            <a href="https://trello.com" target="_blank">Trello</a>
+                        </li>
+                        <li data-tooltip="Pizarra digital para modelos de negocio, DAFO, brainstorming colaborativo">
+                            <img src="https://www.google.com/s2/favicons?domain=miro.com&sz=32" alt="Miro" class="favicon">
+                            <a href="https://miro.com" target="_blank">Miro</a>
+                        </li>
+                        <li data-tooltip="Herramienta para diagramas y wireframes visuales">
+                            <img src="https://www.google.com/s2/favicons?domain=whimsical.com&sz=32" alt="Whimsical" class="favicon">
+                            <a href="https://whimsical.com" target="_blank">Whimsical</a>
+                        </li>
+                        <li data-tooltip="Mindomo">
+                            <img src="https://www.google.com/s2/favicons?domain=mindomo.com&sz=32" alt="Mindomo" class="favicon">
+                            <a href="https://mindomo.com" target="_blank">Mindomo</a>
+                        </li>
+                        <li data-tooltip="CRM">
+                            <img src="https://www.google.com/s2/favicons?domain=notion.so&sz=32" alt="CRM" class="favicon">
+                            <a href="https://www.notion.so/d3809aa530834686a973d435532c2254?v=7b8bea04f0c54728b1ecb18e0eb8ae89&pvs=4" target="_blank">CRM</a>
+                        </li>
+                        <li data-tooltip="Oficina palabras mágicas">
+                            <img src="https://www.google.com/s2/favicons?domain=sites.google.com&sz=32" alt="Oficina" class="favicon">
+                            <a href="https://sites.google.com/view/palabras-magicas-oficina/inicio" target="_blank">Oficina palabras mágicas</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- 🔍 MARKETING Y SEO -->
+            <div class="category">
+                <h2>🔍 Marketing y SEO</h2>
+                <div class="category-scroll">
+                    <ul>
+                        <li data-tooltip="Analítica web y seguimiento de tráfico">
+                            <img src="https://www.google.com/s2/favicons?domain=analytics.google.com&sz=32" alt="Analytics" class="favicon">
+                            <a href="https://analytics.google.com" target="_blank">Google Analytics</a>
+                        </li>
+                        <li data-tooltip="Herramienta para crear mapas de experiencia de usuario">
+                            <img src="https://www.google.com/s2/favicons?domain=uxpressia.com&sz=32" alt="UX Pressia" class="favicon">
+                            <a href="https://uxpressia.com" target="_blank">UX Pressia</a>
+                        </li>
+                        <li data-tooltip="Generador de palabras clave para SEO">
+                            <img src="https://www.google.com/s2/favicons?domain=keywordbox.com&sz=32" alt="Keywordbox" class="favicon">
+                            <a href="https://keywordbox.com" target="_blank">Keywordbox</a>
+                        </li>
+                        <li data-tooltip="Descubre preguntas que hacen los usuarios">
+                            <img src="https://www.google.com/s2/favicons?domain=answerthepublic.com&sz=32" alt="AnswerThePublic" class="favicon">
+                            <a href="https://answerthepublic.com" target="_blank">Answer the public</a>
+                        </li>
+                        <li data-tooltip="Extensión para análisis SEO en tiempo real">
+                            <img src="https://www.google.com/s2/favicons?domain=seoquake.com&sz=32" alt="SEOQuake" class="favicon">
+                            <a href="#" target="_blank">SEOQuake</a>
+                        </li>
+                        <li data-tooltip="Suite todo en uno líder (keywords, backlinks, competencia, auditoríasy SEO)">
+                            <img src="https://www.google.com/s2/favicons?domain=semrush.com&sz=32" alt="Semrush" class="favicon">
+                            <a href="https://semrush.com" target="_blank">Semrush (Keyword Magic Tool)</a>
+                        </li>
+                        <li data-tooltip="Gestión y análisis de redes sociales">
+                            <img src="https://www.google.com/s2/favicons?domain=metricool.com&sz=32" alt="Metricool" class="favicon">
+                            <a href="https://metricool.com" target="_blank">Metricool</a>
+                        </li>
+                        <li data-tooltip="Detector de plagio y contenido duplicado">
+                            <img src="https://www.google.com/s2/favicons?domain=copyscape.com&sz=32" alt="Copyscape" class="favicon">
+                            <a href="https://copyscape.com" target="_blank">Copyscape</a>
+                        </li>
+                        <li data-tooltip="Lector de noticias y agregador de contenido">
+                            <img src="https://www.google.com/s2/favicons?domain=feedly.com&sz=32" alt="Feedly" class="favicon">
+                            <a href="https://feedly.com" target="_blank">Feedly</a>
+                        </li>
+                        <li data-tooltip="Gestión de proyectos y tareas en equipo">
+    			    <img src="https://www.google.com/s2/favicons?domain=asana.com&sz=32" alt="Asana" class="favicon">
+    			    <a href="https://asana.com" target="_blank">Asana</a>
+			</li>
+
+			<li data-tooltip="Plataforma de gestión de trabajo y proyectos">
+    			    <img src="https://www.google.com/s2/favicons?domain=monday.com&sz=32" alt="Monday.com" class="favicon">
+    			    <a href="https://monday.com" target="_blank">Monday.com</a>
+			</li>
+
+			<li data-tooltip="Comunicación empresarial y mensajería en equipo">
+    			    <img src="https://www.google.com/s2/favicons?domain=slack.com&sz=32" alt="Slack" class="favicon">
+    			    <a href="https://slack.com" target="_blank">Slack</a>
+			</li>
+
+			<li data-tooltip="Herramienta SEO para investigación y análisis">
+    			    <img src="https://www.google.com/s2/favicons?domain=semrush.com&sz=32" alt="Semrush" class="favicon">
+    			    <a href="https://semrush.com" target="_blank">Semrush</a>
+			</li>
+
+			<li data-tooltip="Suite de herramientas SEO y análisis de backlinks">
+    			    <img src="https://www.google.com/s2/favicons?domain=ahrefs.com&sz=32" alt="Ahrefs" class="favicon">
+    			    <a href="https://ahrefs.com" target="_blank">Ahrefs</a>
+			</li>
+
+			<li data-tooltip="Analítica web y seguimiento de datos de Google">
+    			    <img src="https://www.google.com/s2/favicons?domain=analytics.google.com&sz=32" alt="Google Analytics 4" class="favicon">
+    			    <a href="https://analytics.google.com" target="_blank">Google Analytics 4</a>
+			</li>
+
+			<li data-tooltip="Mapas de calor y grabaciones de sesiones de usuario">
+    			    <img src="https://www.google.com/s2/favicons?domain=hotjar.com&sz=32" alt="Hotjar" class="favicon">
+    			    <a href="https://hotjar.com" target="_blank">Hotjar</a>
+			</li>
+
+			<li data-tooltip="Mapas de calor, pruebas A/B y análisis de comportamiento">
+			    <img src="https://www.google.com/s2/favicons?domain=crazyegg.com&sz=32" alt="Crazy Egg" class="favicon">
+			    <a href="https://crazyegg.com" target="_blank">Crazy Egg</a>
+			</li>
+
+			<li data-tooltip"Auditoría SEO y rastreador de sitios web">
+			    <img src="https://www.google.com/s2/favicons?domain=screamingfrog.co.uk&sz=32" alt="Screaming Frog SEO Spider" class="favicon">
+			    <a href="https://www.screamingfrog.co.uk/seo-spider/" target="_blank">Screaming Frog SEO Spider</a>
+			</li>
+
+			<li data-tooltip="Gestión de redes sociales y programación de contenidos">
+			    <img src="https://www.google.com/s2/favicons?domain=hootsuite.com&sz=32" alt="Hootsuite" class="favicon">
+			    <a href="https://hootsuite.com" target="_blank">Hootsuite</a>
+			</li>
+
+			<li data-tooltip="Programación y análisis de publicaciones en redes sociales">
+			    <img src="https://www.google.com/s2/favicons?domain=buffer.com&sz=32" alt="Buffer" class="favicon">
+			    <a href="https://buffer.com" target="_blank">Buffer</a>
+			</li>
+
+			<li data-tooltip="Programación de contenido visual para Instagram y redes">
+			    <img src="https://www.google.com/s2/favicons?domain=later.com&sz=32" alt="Later" class="favicon">
+			    <a href="https://later.com" target="_blank">Later</a>
+			</li>
+
+			<li data-tooltip="Estadísticas y análisis de canales de redes sociales">
+			    <img src="https://www.google.com/s2/favicons?domain=socialblade.com&sz=32" alt="Social Blade" class="favicon">
+			    <a href="https://socialblade.com" target="_blank">Social Blade</a>
+			</li>
+
+			<li data-tooltip="Monitoreo de marca y análisis de menciones en línea">
+			    <img src="https://www.google.com/s2/favicons?domain=brand24.com&sz=32" alt="Brand24" class="favicon">
+			    <a href="https://brand24.com" target="_blank">Brand24</a>
+			</li>
+
+			<li data-tooltip="Monitoreo de medios y seguimiento de menciones de marca">
+			    <img src="https://www.google.com/s2/favicons?domain=mention.com&sz=32" alt="Mention" class="favicon">
+			    <a href="https://mention.com" target="_blank">Mention</a>
+			</li>
+
+			<li data-tooltip="Calendario editorial y gestión de marketing de contenidos">
+			    <img src="https://www.google.com/s2/favicons?domain=coschedule.com&sz=32" alt="CoSchedule" class="favicon">
+			    <a href="https://coschedule.com" target="_blank">CoSchedule</a>
+			</li>
+
+			<li data-tooltip="Base de datos colaborativa y gestión de proyectos">
+			    <img src="https://www.google.com/s2/favicons?domain=airtable.com&sz=32" alt="Airtable" class="favicon">
+			    <a href="https://airtable.com" target="_blank">Airtable</a>
+			</li>
+
+			<li data-tooltip="Asistente de escritura y corrector gramatical">
+			    <img src="https://www.google.com/s2/favicons?domain=grammarly.com&sz=32" alt="Grammarly" class="favicon">
+			    <a href="https://grammarly.com" target="_blank">Grammarly</a>
+			</li>
+
+			<li data-tooltip="Editor que mejora la claridad y legibilidad del texto">
+			    <img src="https://www.google.com/s2/favicons?domain=hemingwayapp.com&sz=32" alt="Hemingway App" class="favicon">
+			    <a href="https://hemingwayapp.com" target="_blank">Hemingway App</a>
+			</li>
+
+			<li data-tooltip="Generador de preguntas e ideas de contenido">
+			    <img src="https://www.google.com/s2/favicons?domain=answerthepublic.com&sz=32" alt="AnswerThePublic" class="favicon">
+			    <a href="https://answerthepublic.com" target="_blank">AnswerThePublic</a>
+			</li>
+
+			<li data-tooltip="Análisis de contenido popular y tendencias virales">
+			    <img src="https://www.google.com/s2/favicons?domain=buzzsumo.com&sz=32" alt="BuzzSumo" class="favicon">
+			    <a href="https://buzzsumo.com" target="_blank">BuzzSumo</a>
+			</li>
+
+			<li data-tooltip="Plataforma de email marketing y automatización">
+			    <img src="https://www.google.com/s2/favicons?domain=mailchimp.com&sz=32" alt="Mailchimp" class="favicon">
+			    <a href="https://mailchimp.com" target="_blank">Mailchimp</a>
+			</li>
+
+			<li data-tooltip="Email marketing avanzado y automatización de campañas">
+			    <img src="https://www.google.com/s2/favicons?domain=activecampaign.com&sz=32" alt="ActiveCampaign" class="favicon">
+			    <a href="https://activecampaign.com" target="_blank">ActiveCampaign</a>
+			</li>
+
+			<li data-tooltip="Plataforma de marketing, ventas y servicio al cliente">
+			    <img src="https://www.google.com/s2/favicons?domain=hubspot.com&sz=32" alt="HubSpot" class="favicon">
+			    <a href="https://hubspot.com" target="_blank">HubSpot</a>
+			</li>
+
+			<li data-tooltip="Email marketing para creadores y negocios digitales">
+			    <img src="https://www.google.com/s2/favicons?domain=convertkit.com&sz=32" alt="Convertkit" class="favicon">
+			    <a href="https://convertkit.com" target="_blank">Convertkit</a>
+			</li>
+
+			<li data-tooltip="Creador de formularios y encuestas interactivas">
+			    <img src="https://www.google.com/s2/favicons?domain=typeform.com&sz=32" alt="Typeform" class="favicon">
+			    <a href="https://typeform.com" target="_blank">Typeform</a>
+			</li>
+
+			<li data-tooltip="Creación y gestión de formularios de HubSpot">
+			    <img src="https://www.google.com/s2/favicons?domain=hubspot.com&sz=32" alt="HubSpot Forms" class="favicon">
+			    <a href="https://www.hubspot.com/products/marketing/forms" target="_blank">HubSpot Forms</a>
+			</li>
+
+			<li data-tooltip="Plataforma publicitaria de Google para anuncios online">
+			    <img src="https://www.google.com/s2/favicons?domain=ads.google.com&sz=32" alt="Google Ads" class="favicon">
+			    <a href="https://ads.google.com" target="_blank">Google Ads</a>
+			</li>
+
+			<li data-tooltip="Gestor de anuncios para Facebook, Instagram y Meta">
+			    <img src="https://www.google.com/s2/favicons?domain=facebook.com/adsmanager&sz=32" alt="Meta Ads Manager" class="favicon">
+			    <a href="https://www.facebook.com/adsmanager" target="_blank">Meta Ads Manager</a>
+			</li>
+
+			<li data-tooltip="Plataforma publicitaria de LinkedIn para anuncios B2B">
+			    <img src="https://www.google.com/s2/favicons?domain=linkedin.com/campaignmanager&sz=32" alt="LinkedIn Campaign Manager" class="favicon">
+			    <a href="https://www.linkedin.com/campaignmanager" target="_blank">LinkedIn Campaign Manager</a>
+			</li>
+
+			<li data-tooltip="Automatización y scripts avanzados para Google Ads">
+			    <img src="https://www.google.com/s2/favicons?domain=google.com/ads/script&sz=32" alt="Google Ads Scripts" class="favicon">
+			    <a href="https://developers.google.com/google-ads/scripts" target="_blank">Google Ads Scripts</a>
+			</li>
+			<li data-tooltip="Plataforma de encuestas y recopilación de datos en línea">
+			    <img src="https://www.google.com/s2/favicons?domain=surveymonkey.com&sz=32" alt="SurveyMonkey" class="favicon">
+			    <a href="https://surveymonkey.com" target="_blank">SurveyMonkey</a>
+			</li>
+
+			<li data-tooltip="Creador de formularios y encuestas interactivas">
+			    <img src="https://www.google.com/s2/favicons?domain=typeform.com&sz=32" alt="Typeform" class="favicon">
+			    <a href="https://typeform.com" target="_blank">Typeform</a>
+			</li>
+
+			<li data-tooltip="Herramienta de pruebas A/B y personalización de Google">
+			    <img src="https://www.google.com/s2/favicons?domain=optimize.google.com&sz=32" alt="Google Optimize" class="favicon">
+			    <a href="https://optimize.google.com" target="_blank">Google Optimize</a>
+			</li>
+
+			<li data-tooltip="Plataforma de experimentación y personalización digital">
+			    <img src="https://www.google.com/s2/favicons?domain=optimizely.com&sz=32" alt="Optimizely" class="favicon">
+			    <a href="https://optimizely.com" target="_blank">Optimizely</a>
+			</li>
+
+			<li data-tooltip="Mensajería en vivo y gestión de relaciones con clientes">
+			    <img src="https://www.google.com/s2/favicons?domain=intercom.com&sz=32" alt="Intercom" class="favicon">
+			    <a href="https://intercom.com" target="_blank">Intercom</a>
+			</li>
+
+			<li data-tooltip="Chatbot y automatización de conversaciones para ventas">
+			    <img src="https://www.google.com/s2/favicons?domain=drift.com&sz=32" alt="Drift" class="favicon">
+			    <a href="https://drift.com" target="_blank">Drift</a>
+			</li>
+
+			<li data-tooltip="Chat en vivo y soporte al cliente (anterior Zopim)">
+			    <img src="https://www.google.com/s2/favicons?domain=zendesk.com&sz=32" alt="Zendesk Chat" class="favicon">
+			    <a href="https://www.zendesk.com/chat/" target="_blank">Zendesk Chat</a>
+			</li>
+
+			<li data-tooltip="CRM gratuito y herramientas de marketing integradas">
+			    <img src="https://www.google.com/s2/favicons?domain=hubspot.com&sz=32" alt="HubSpot CRM" class="favicon">
+			    <a href="https://www.hubspot.com/products/crm" target="_blank">HubSpot CRM</a>
+			</li>
+
+			<li data-tooltip="Plataforma de CRM y gestión de ventas empresarial">
+			    <img src="https://www.google.com/s2/favicons?domain=salesforce.com&sz=32" alt="Salesforce" class="favicon">
+			    <a href="https://salesforce.com" target="_blank">Salesforce</a>
+			</li>
+
+			<li data-tooltip="CRM sencillo y visual para equipos de ventas">
+			    <img src="https://www.google.com/s2/favicons?domain=pipedrive.com&sz=32" alt="Pipedrive" class="favicon">
+			    <a href="https://pipedrive.com" target="_blank">Pipedrive</a>
+			</li>
+
+			<li data-tooltip="Plataforma de email outreach y automatización de prospección">
+			    <img src="https://www.google.com/s2/favicons?domain=lemlist.com&sz=32" alt="Lemlist" class="favicon">
+			    <a href="https://lemlist.com" target="_blank">Lemlist</a>
+			</li>
+
+			<li data-tooltip="Automatización de ventas y plataforma de engagement">
+			    <img src="https://www.google.com/s2/favicons?domain=outreach.io&sz=32" alt="Outreach" class="favicon">
+			    <a href="https://outreach.io" target="_blank">Outreach</a>
+			</li>
+
+			<li data-tooltip="Constructor de sitios web visual y sin código">
+			    <img src="https://www.google.com/s2/favicons?domain=webflow.com&sz=32" alt="Webflow" class="favicon">
+			    <a href="https://webflow.com" target="_blank">Webflow</a>
+			</li>
+
+			<li data-tooltip="Constructor de sitios web drag-and-drop">
+			    <img src="https://www.google.com/s2/favicons?domain=wix.com&sz=32" alt="Wix" class="favicon">
+			    <a href="https://wix.com" target="_blank">Wix</a>
+			</li>
+
+			<li data-tooltip="Plataforma para crear sitios web y tiendas online">
+			    <img src="https://www.google.com/s2/favicons?domain=squarespace.com&sz=32" alt="Squarespace" class="favicon">
+			    <a href="https://squarespace.com" target="_blank">Squarespace</a>
+			</li>
+
+			<li data-tooltip="Constructor de landing pages para conversiones">
+			    <img src="https://www.google.com/s2/favicons?domain=unbounce.com&sz=32" alt="Unbounce" class="favicon">
+			    <a href="https://unbounce.com" target="_blank">Unbounce</a>
+			</li>
+
+			<li data-tooltip="Plataforma de creación de landing pages de alto rendimiento">
+			    <img src="https://www.google.com/s2/favicons?domain=instapage.com&sz=32" alt="Instapage" class="favicon">
+			    <a href="https://instapage.com" target="_blank">Instapage</a>
+			</li>
+
+			<li data-tooltip="Constructor de landing pages y páginas de destino">
+			    <img src="https://www.google.com/s2/favicons?domain=leadpages.com&sz=32" alt="Leadpages" class="favicon">
+			    <a href="https://leadpages.com" target="_blank">Leadpages</a>
+			</li>
+
+			<li data-tooltip="Constructor de páginas visual para WordPress">
+			    <img src="https://www.google.com/s2/favicons?domain=elementor.com&sz=32" alt="Elementor" class="favicon">
+			    <a href="https://elementor.com" target="_blank">Elementor</a>
+			</li>
+
+			<li data-tooltip="Tema y constructor visual para WordPress">
+			    <img src="https://www.google.com/s2/favicons?domain=elegantthemes.com&sz=32" alt="Divi" class="favicon">
+			    <a href="https://www.elegantthemes.com/gallery/divi/" target="_blank">Divi</a>
+			</li>
+
+			<li data-tooltip="Plataforma de reseñas y gestión de reputación online">
+			    <img src="https://www.google.com/s2/favicons?domain=trustpilot.com&sz=32" alt="Trustpilot" class="favicon">
+			    <a href="https://trustpilot.com" target="_blank">Trustpilot</a>
+			</li>
+
+			<li data-tooltip="Reseñas de productos y marketing social para ecommerce">
+			    <img src="https://www.google.com/s2/favicons?domain=yotpo.com&sz=32" alt="Yotpo" class="favicon">
+			    <a href="https://yotpo.com" target="_blank">Yotpo</a>
+			</li>
+
+			<li data-tooltip="Programas de fidelización y recompensas para ecommerce">
+			    <img src="https://www.google.com/s2/favicons?domain=smile.io&sz=32" alt="Smile.io" class="favicon">
+			    <a href="https://smile.io" target="_blank">Smile.io</a>
+			</li>
+
+			<li data-tooltip="Plataforma de programas de fidelización para comercios">
+			    <img src="https://www.google.com/s2/favicons?domain=loyaltylion.com&sz=32" alt="LoyaltyLion" class="favicon">
+			    <a href="https://loyaltylion.com" target="_blank">LoyaltyLion</a>
+			</li>
+
+			<li data-tooltip="Plataforma de servicio al cliente y soporte">
+			    <img src="https://www.google.com/s2/favicons?domain=zendesk.com&sz=32" alt="Zendesk" class="favicon">
+			    <a href="https://zendesk.com" target="_blank">Zendesk</a>
+			</li>
+
+			<li data-tooltip="Software de servicio al cliente y ticketing">
+			    <img src="https://www.google.com/s2/favicons?domain=freshdesk.com&sz=32" alt="Freshdesk" class="favicon">
+			    <a href="https://freshdesk.com" target="_blank">Freshdesk</a>
+			</li>
+
+			<li data-tooltip="Plataforma de ecommerce para tiendas online">
+			    <img src="https://www.google.com/s2/favicons?domain=shopify.com&sz=32" alt="Shopify" class="favicon">
+			    <a href="https://shopify.com" target="_blank">Shopify</a>
+			</li>
+
+			<li data-tooltip="Plataforma de ecommerce para negocios en crecimiento">
+			    <img src="https://www.google.com/s2/favicons?domain=bigcommerce.com&sz=32" alt="BigCommerce" class="favicon">
+			    <a href="https://bigcommerce.com" target="_blank">BigCommerce</a>
+			</li>
+
+			<li data-tooltip="Plugin de ecommerce para sitios de WordPress">
+			    <img src="https://www.google.com/s2/favicons?domain=woocommerce.com&sz=32" alt="WooCommerce" class="favicon">
+			    <a href="https://woocommerce.com" target="_blank">WooCommerce</a>
+			</li>
+
+			<li data-tooltip="Email marketing y automatización para ecommerce">
+			    <img src="https://www.google.com/s2/favicons?domain=klaviyo.com&sz=32" alt="Klaviyo" class="favicon">
+			    <a href="https://klaviyo.com" target="_blank">Klaviyo</a>
+			</li>
+
+			<li data-tooltip="Software de contabilidad y finanzas para negocios">
+			    <img src="https://www.google.com/s2/favicons?domain=quickbooks.intuit.com&sz=32" alt="QuickBooks" class="favicon">
+			    <a href="https://quickbooks.intuit.com" target="_blank">QuickBooks</a>
+			</li>
+
+			<li data-tooltip="Plataforma de contabilidad en la nube para pequeñas empresas">
+			    <img src="https://www.google.com/s2/favicons?domain=xero.com&sz=32" alt="Xero" class="favicon">
+			    <a href="https://xero.com" target="_blank">Xero</a>
+			</li>
+
+			<li data-tooltip="Tarjetas de empresa y gestión de gastos">
+			    <img src="https://www.google.com/s2/favicons?domain=pleo.io&sz=32" alt="Pleo" class="favicon">
+			    <a href="https://pleo.io" target="_blank">Pleo</a>
+			</li>
+
+			<li data-tooltip="Gestión y seguimiento de gastos de empresa">
+			    <img src="https://www.google.com/s2/favicons?domain=expensify.com&sz=32" alt="Expensify" class="favicon">
+			    <a href="https://expensify.com" target="_blank">Expensify</a>
+			</li>
+
+			<li data-tooltip="Firma electrónica y gestión de documentos">
+			    <img src="https://www.google.com/s2/favicons?domain=docusign.com&sz=32" alt="DocuSign" class="favicon">
+			    <a href="https://docusign.com" target="_blank">DocuSign</a>
+			</li>
+
+			<li data-tooltip="Firma electrónica y acuerdos digitales (Dropbox Sign)">
+			    <img src="https://www.google.com/s2/favicons?domain=hellosign.com&sz=32" alt="HelloSign" class="favicon">
+			    <a href="https://hellosign.com" target="_blank">HelloSign</a>
+			</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- 🌐 DESARROLLO WEB Y TÉCNICO -->
+            <div class="category">
+                <h2>🌐 Desarrollo Web y Técnico</h2>
+                <div class="category-scroll">
+                    <ul>
+                        <li data-tooltip="Analizador de velocidad y rendimiento web">
+                            <img src="https://www.google.com/s2/favicons?domain=gtmetrix.com&sz=32" alt="GTmetrix" class="favicon">
+                            <a href="https://gtmetrix.com" target="_blank">Gtmetrix</a>
+                        </li>
+                    	<li data-tooltip="GitHub: Plataforma de desarrollo colaborativo para alojar y revisar código, gestionar proyectos y crear software">
+                            <img src="https://www.google.com/s2/favicons?domain=github.com&sz=32" alt="GitHub" class="favicon">
+                            <a href="https://github.com/" target="_blank">GitHub</a>
+                        </li>
+                     	<li data-tooltip="Docker: Plataforma para desarrollar, enviar y ejecutar aplicaciones en contenedores. Empaqueta software con todas sus dependencias para garantizar que funcione de manera uniforme en cualquier entorno">
+                            <img src="https://www.google.com/s2/favicons?domain=https://www.docker.com/&sz=32" alt="DokerGitHub" class="favicon">
+                            <a href="https://www.docker.com/" target="_blank">Docker</a>
+                        </li>
+                        <li data-tooltip="Conversor de Word a HTML limpio">
+                            <img src="https://www.google.com/s2/favicons?domain=wordhtml.com&sz=32" alt="WordHTML" class="favicon">
+                            <a href="https://wordhtml.com" target="_blank">WordHTML.com</a>
+                        </li>
+                        <li data-tooltip="Herramienta para incrustar contenido responsive">
+                            <img src="https://www.google.com/s2/favicons?domain=embedresponsively.com&sz=32" alt="EmbedResponsively" class="favicon">
+                            <a href="https://embedresponsively.com" target="_blank">Embedresponsively.com</a>
+                        </li>
+                        <li data-tooltip="Editar sitios web directamente en el navegador">
+                            <img src="https://www.google.com/s2/favicons?domain=google.com&sz=32" alt="Edit Website" class="favicon">
+                            <a href="#" target="_blank">Edit Website Extension</a>
+                        </li>
+                        <li data-tooltip="Entorno de notebooks Python en la nube">
+                            <img src="https://colab.research.google.com/favicon.ico" alt="" class="favicon">
+                            <a href="https://colab.research.google.com/" target="_blank">Google Colab</a>
+                        </li>
+                    	<li data-tooltip="WordPress CMS">
+                            <img src="https://www.google.com/s2/favicons?domain=wordpress.com&sz=32" alt="WordPress" class="favicon">
+                            <a href="https://wordpress.com/" target="_blank">WordPress</a>
+			<li data-tooltip="Constructor de sitios web drag-and-drop">
+    			    <img src="https://www.google.com/s2/favicons?domain=wix.com&sz=32" alt="Wix" class="favicon">
+    			    <a href="https://wix.com" target="_blank">Wix</a>
+			</li>                            
+                        </li>                         
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- 🎨 DISEÑO Y MULTIMEDIA -->
+            <div class="category">
+                <h2>🎨 Diseño y Multimedia</h2>
+                <div class="category-scroll">
+                    <ul>
+                        <li data-tooltip="Editor gráfico online para diseños rápidos">
+                            <img src="https://www.google.com/s2/favicons?domain=canva.com&sz=32" alt="Canva" class="favicon">
+                            <a href="https://canva.com" target="_blank">Canva</a>
+                        </li>
+                        <li data-tooltip="Compresor de imágenes PNG y JPEG">
+                            <img src="https://www.google.com/s2/favicons?domain=tinypng.com&sz=32" alt="TinyPNG" class="favicon">
+                            <a href="https://tinypng.com" target="_blank">TinyPNG.com</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- 🤖 IA Y ASISTENTES -->
+            <div class="category">
+                <h2>🤖 IA y Asistentes</h2>
+                <div class="category-scroll">
+                    <ul>
+                        <li data-tooltip="Asistente de IA conversacional">
+                            <img src="https://www.google.com/s2/favicons?domain=deepseek.com&sz=32" alt="DeepSeek" class="favicon">
+                            <a href="https://chat.deepseek.com/a/chat/s/825e9fc6-f310-4087-8669-b612cadf82bc" target="_blank">DeepSeek</a>
+                        </li>
+                     	<li data-tooltip="ChatGPT OpenAI">
+                            <img src="https://www.google.com/s2/favicons?domain=openai.com&sz=32" alt="ChatGPT" class="favicon">
+                            <a href="https://chat.openai.com" target="_blank">ChatGPT OpenAI</a>
+                        </li>
+                        <li data-tooltip="Asistente de IA con contexto extenso">
+                            <img src="https://www.google.com/s2/favicons?domain=moonshot.cn&sz=32" alt="Kimi" class="favicon">
+                            <a href="https://kimi.moonshot.cn" target="_blank">Kimi</a>
+                        </li>
+                    	<li data-tooltip="Gemini, conversacional directa, multimodal">
+                            <img src="https://www.google.com/s2/favicons?domain=gemini.google.com&sz=32" alt="Kimi" class="favicon">
+                            <a href="https://gemini.google.com" target="_blank">Gemini</a>
+                        </li>
+                        <li data-tooltip="Toma tus notas e ideas al siguiente nivel con NotebookLM, un asistente de IA desarrollado por Google Labs para ayudarte a estudiar, investigar y organizar información">
+                            <img src="https://www.google.com/s2/favicons?domain=notebooklm.google.com&sz=32" alt="NotebookLM" class="favicon">
+                            <a href="https://notebooklm.google.com/" target="_blank">NotebookLM</a>
+                        </li>                        
+                        <li data-tooltip="Motor de búsqueda con IA">
+                            <img src="https://www.google.com/s2/favicons?domain=perplexity.ai&sz=32" alt="Perplexity" class="favicon">
+                            <a href="https://www.perplexity.ai" target="_blank">Perplexity.ai</a>
+                        </li>
+                        <li data-tooltip="Automatización de tareas web y extracción de datos">
+                            <img src="https://www.google.com/s2/favicons?domain=harpa.ai&sz=32" alt="HARPA" class="favicon">
+                            <a href="https://harpa.ai" target="_blank">HARPA</a>
+                        </li>
+                        <li data-tooltip="Grok. Asistente de IA creado por xAI (Elon Musk), con acceso a información en tiempo real y un tono contestatario">
+                            <img src="https://www.google.com/s2/favicons?domain=grok.com/&sz=32" alt="Grok" class="favicon">
+                            <a href="https://grok.com/" target="_blank">Grok</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- 📝 HERRAMIENTAS DE TEXTO Y ESCRITURA -->
+            <div class="category">
+                <h2>📝 Herramientas de Texto y Escritura</h2>
+                <div class="category-scroll">
+                    <ul>
+                        <li data-tooltip="Editor de texto minimalista">
+                            <img src="https://www.google.com/s2/favicons?domain=google.com&sz=32" alt="Lorca" class="favicon">
+                            <a href="#" target="_blank">Lorca Editor</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- 🗺️ UBICACIÓN Y NAVEGACIÓN -->
+            <div class="category">
+                <h2>🗺️ Ubicación y Navegación</h2>
+                <div class="category-scroll">
+                    <ul>
+                        <li data-tooltip="Maps">
+                            <img src="https://www.google.com/s2/favicons?domain=maps.google.com&sz=32" alt="Maps" class="favicon">
+                            <a href="https://maps.google.com" target="_blank">Maps</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- 👤 RECURSOS PERSONALES -->
+            <div class="category">
+                <h2>👤 Recursos Personales</h2>
+                <div class="category-scroll">
+                    <ul>
+                        <li data-tooltip="Zeta veintidos">
+                            <img src="https://www.google.com/s2/favicons?domain=zetaveintidos.wordpress.com&sz=32" alt="Zeta" class="favicon">
+                            <a href="https://zetaveintidos.wordpress.com/" target="_blank">Zeta veintidos</a>
+                        </li>
+                        <li data-tooltip="Proinglés B1">
+                            <img src="https://www.google.com/s2/favicons?domain=proinglesb1.wordpress.com&sz=32" alt="Proinglés" class="favicon">
+                            <a href="https://proinglesb1.wordpress.com/" target="_blank">Proinglés B1</a>
+                        </li>
+                        <li data-tooltip="Carlospixie">
+                            <img src="https://www.google.com/s2/favicons?domain=carlostreski.wordpress.com&sz=32" alt="Carlospixie" class="favicon">
+                            <a href="https://carlostreski.wordpress.com/" target="_blank">Carlospixie</a>
+                        </li>
+                        <li data-tooltip="IPasen">
+                            <img src="https://www.google.com/s2/favicons?domain=seneca.juntadeandalucia.es/seneca/jsp/portal&sz=32" alt="IPasen" class="favicon">
+                            <a href="https://seneca.juntadeandalucia.es/seneca/jsp/portal/" target="_blank">IPasen</a>
+                        </li>
+                        <li data-tooltip="IVox">
+                            <img src="https://www.google.com/s2/favicons?domain=ivoox.com/player_es_podcast_1304039_zp_1.html?c1=7c7c7c&sz=32" alt="IVox" class="favicon">
+                            <a href="https://www.ivoox.com/player_es_podcast_1304039_zp_1.html?c1=7c7c7c" target="_blank">IVox</a>
+                        </li>
+                        <li data-tooltip="Radio Quinty">
+                            <img src="https://www.google.com/s2/favicons?domain=zeno.fm/radio/radio-quinty&sz=32" alt="Radio Quinty" class="favicon">
+                            <a href="https://zeno.fm/radio/radio-quinty/" target="_blank">Radio Quinty</a>
+                        </li>
+                        <li data-tooltip="What Magazine">
+                            <img src="https://www.google.com/s2/favicons?domain=whatmagazine.es/author/carlos-sanchez&sz=32" alt="What Magazine" class="favicon">
+                            <a href="https://whatmagazine.es/author/carlos-sanchez/" target="_blank">What Magazine</a>
+                        </li>
+                        <li data-tooltip="Carloslitus">
+                            <img src="https://www.google.com/s2/favicons?domain=carloslitus.wordpress.com/&sz=32" alt="Carloslitus" class="favicon">
+                            <a href="https://carloslitus.wordpress.com/" target="_blank">Carloslitus</a>
+                        </li>
+                        <li data-tooltip="Palabras mágicas">
+                            <img src="https://www.google.com/s2/favicons?domain=prueba4869.wordpress.com/&sz=32" alt="Palabras mágicas" class="favicon">
+                            <a href="https://prueba4869.wordpress.com/" target="_blank">Palabras mágicas</a>
+                        </li>
+                        <li data-tooltip="Prueba">
+                            <img src="https://www.google.com/s2/favicons?domain=prueba5396.wordpress.com/&sz=32" alt="Prueba" class="favicon">
+                            <a href="https://prueba5396.wordpress.com/" target="_blank">Prueba</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- 🛍️ TIENDAS -->
+            <div class="category">
+                <h2>🛍️ Tiendas</h2>
+                <div class="category-scroll">
+                    <ul>
+                        <li data-tooltip="Shein">
+                            <img src="https://www.google.com/s2/favicons?domain=shein.com&sz=32" alt="Shein" class="favicon">
+                            <a href="https://es.shein.com/" target="_blank">Shein</a>
+                        </li>
+                        <li data-tooltip="Temu">
+                            <img src="https://www.google.com/s2/favicons?domain=temu.com&sz=32" alt="Temu" class="favicon">
+                            <a href="https://www.temu.com/es/" target="_blank">Temu</a>
+                        </li>
+                        <li data-tooltip="Alibaba">
+                            <img src="https://www.google.com/s2/favicons?domain=alibaba.com&sz=32" alt="Alibaba" class="favicon">
+                            <a href="https://www.alibaba.com/" target="_blank">Alibaba</a>
+                        </li>
+                        <li data-tooltip="Globo">
+                            <img src="https://www.google.com/s2/favicons?domain=glovoapp.com&sz=32" alt="Globo" class="favicon">
+                            <a href="https://glovoapp.com/es/es" target="_blank">Globo</a>
+                        </li>
+                        <li data-tooltip="Fnac">
+                            <img src="https://www.google.com/s2/favicons?domain=fnac.es&sz=32" alt="Fnac" class="favicon">
+                            <a href="https://www.fnac.es/" target="_blank">Fnac</a>
+                        </li>
+                        <li data-tooltip="Amazon">
+                            <img src="https://www.google.com/s2/favicons?domain=amazon.es&sz=32" alt="amazon" class="favicon">
+                            <a href="https://www.amazon.es/" target="_blank">Amazon</a>
+                        </li>
+                        <li data-tooltip="Decathlon">
+                            <img src="https://www.google.com/s2/favicons?domain=https://www.decathlon.es/es&sz=32" alt="Decathlon" class="favicon">
+                            <a href="https://www.decathlon.es/es" target="_blank">Decathlon</a>
+                        </li>
+                        
+                        <li data-tooltip="IKEA">
+                            <img src="https://www.google.com/s2/favicons?domain=Ikea.es&sz=32" alt="IKEA" class="favicon">
+                            <a href="https://www.ikea.es/" target="_blank">IKEA</a>
+                        </li>
+                        <li data-tooltip="Zalando">
+                            <img src="https://www.google.com/s2/favicons?domain=zalando.es&sz=32" alt="Zalando" class="favicon">
+                            <a href="https://www.zalando.es/" target="_blank">Zalando</a>
+                        </li>
+                        <li data-tooltip="Aliexpress">
+                            <img src="https://www.google.com/s2/favicons?domain=aliexpress.com&sz=32" alt="Aliexpres" class="favicon">
+                            <a href="https://es.aliexpress.com/" target="_blank">Aliexpress</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- 🔒 SEGURIDAD -->
+            <div class="category">
+                <h2>🔒 Seguridad</h2>
+                <div class="category-scroll">
+                    <ul>
+                        <li data-tooltip="VirusTotal">
+                            <img src="https://www.google.com/s2/favicons?domain=virustotal.com&sz=32" alt="Virus Total" class="favicon">
+                            <a href="https://www.virustotal.com/gui/home/upload" target="_blank">VirusTotal</a>
+                        </li>
+			<li data-tooltip="BeValk: Tu guardián digital. Aplicación de ciberseguridad personal para analizar la seguridad de enlaces, códigos QR, correos y wallets de criptomonedas, y conectar con asesoría profesional.">
+			    <img src="https://www.google.com/s2/favicons?domain=bevalk.com&sz=32" alt="BeValk" class="favicon">
+			    <a href="https://bevalk.com/" target="_blank">BeValk</a>
+			</li>                        
+                   </ul>
+                </div>
+            </div>
+            
+            <!-- ♟️ DAMA -->
+            <div class="category">
+                <h2>♟️ Dama</h2>
+                <div class="category-scroll">
+                    <ul>
+                        <li data-tooltip="Dama">
+                            <img src="https://www.google.com/s2/favicons?domain=dama114.wordpress.com&sz=32" alt="Dama" class="favicon">
+                            <a href="https://dama114.wordpress.com/" target="_blank">Dama</a>
+                        </li>
+                   </ul>
+                </div>
+            </div>
+            
+            <!-- 🌐 BUSCADORES | NAVEGADORES -->
+            <div class="category">
+                <h2>🌐 Buscadores | Navegadores</h2>
+                <div class="category-scroll">
+                    <ul>
+                        <li data-tooltip="Buscador de Microsoft con recompensas">
+                            <img src="https://www.google.com/s2/favicons?domain=bing.com&sz=32" alt="Bing" class="favicon">
+                            <a href="https://www.bing.com/" target="_blank">Bing</a>
+                        </li>
+                        <li data-tooltip="Buscador que respeta la privacidad">
+                            <img src="https://www.google.com/s2/favicons?domain=duckduckgo.com&sz=32" alt="DuckDuckGo" class="favicon">
+                            <a href="https://duckduckgo.com/" target="_blank">DuckDuckGo</a>
+                        </li>
+                        <li data-tooltip="Búsqueda privada usando Google">
+                            <img src="https://www.google.com/s2/favicons?domain=startpage.com&sz=32" alt="Start Page" class="favicon">
+                            <a href="https://www.startpage.com/es/" target="_blank">Start Page</a>
+                        </li>
+                        <li data-tooltip="Buscador anónimo y sin seguimiento">
+                            <img src="https://www.google.com/s2/favicons?domain=gibiru.com&sz=32" alt="Gibiru" class="favicon">
+                            <a href="https://gibiru.com/" target="_blank">Gibiru</a>
+                        </li>
+                        <li data-tooltip="Qwant">
+                            <img src="https://www.google.com/s2/favicons?domain=qwant.com&sz=32" alt="Qwant" class="favicon">
+                            <a href="https://www.qwant.com/?l=es" target="_blank">Qwant</a>
+                        </li>
+                        <li data-tooltip="Yahoo">
+                            <img src="https://www.google.com/s2/favicons?domain=search.yahoo.com&sz=32" alt="Yahoo" class="favicon">
+                            <a href="https://es.search.yahoo.com/" target="_blank">Yahoo</a>
+                        </li>
+                        <li data-tooltip="Wolframalpha">
+                            <img src="https://www.google.com/s2/favicons?domain=wolframalpha.com&sz=32" alt="Wolframalpha" class="favicon">
+                            <a href="https://www.wolframalpha.com/" target="_blank">Wolframalpha</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- 📚 RECURSOS Y MANUALES -->
+            <div class="category">
+                <h2>📚 Recursos y manuales</h2>
+                <div class="category-scroll">
+                    <ul>
+                        <li data-tooltip="Medium. Es una plataforma de publicación abierta donde millones de personas leen, escriben y comparten historias, ideas y conocimientos sobre tecnología, negocios, cultura y más">
+                            <img src="https://www.google.com/s2/favicons?domain=medium.com&sz=32" alt="Medium" class="favicon">
+                            <a href="https://medium.com" target="_blank">Medium</a>
+                        </li>       
+                        <li data-tooltip="Agrega y organiza noticias, blogs, podcasts y boletines de todas tus fuentes favoritas en un solo lugar">
+                            <img src="https://www.google.com/s2/favicons?domain=feedly.com&sz=32" alt="Feedly" class="favicon">
+                            <a href="https://feedly.com/i/my/me" target="_blank">Feedly</a>
+                        </li>
+			<li data-tooltip="Emprendedores.es: Medios especializados en emprendimiento, startups, negocios y liderazgo. Ofrece noticias, análisis, tendencias y consejos prácticos para emprendedores y pymes.">
+			    <img src="https://www.google.com/s2/favicons?domain=emprendedores.es&sz=32" alt="Emprendedores.es" class="favicon">
+			    <a href="https://emprendedores.es/" target="_blank">Emprendedores.es</a>
+			</li>
+
+			<li data-tooltip="Marketing4ecommerce: Portal especializado en marketing digital, ecommerce, transformación digital y retail. Noticias, casos de éxito y análisis del sector.">
+			    <img src="https://www.google.com/s2/favicons?domain=marketing4ecommerce.net&sz=32" alt="Marketing4ecommerce" class="favicon">
+			    <a href="https://marketing4ecommerce.net/" target="_blank">Marketing4ecommerce</a>
+			</li>
+
+			<li data-tooltip="Marketing Directo: Referente en noticias de marketing, publicidad, comunicación y tendencias del sector. Información actualizada para profesionales del marketing.">
+			    <img src="https://www.google.com/s2/favicons?domain=marketingdirecto.com&sz=32" alt="Marketing Directo" class="favicon">
+			    <a href="https://www.marketingdirecto.com/" target="_blank">Marketing Directo</a>
+			</li>
+
+			<li data-tooltip="Xataka: Medio líder en tecnología, gadgets, ciencia y cultura digital. Análisis, reviews y noticias sobre innovación tecnológica y tendencias digitales.">
+			    <img src="https://www.google.com/s2/favicons?domain=xataka.com&sz=32" alt="Xataka" class="favicon">
+			    <a href="https://www.xataka.com/" target="_blank">Xataka</a>
+			</li>
+
+			<li data-tooltip="Forbes Argentina: Edición argentina de la prestigiosa revista Forbes. Noticias sobre negocios, economía, finanzas, emprendedores y líderes en Argentina.">
+			    <img src="https://www.google.com/s2/favicons?domain=forbesargentina.com&sz=32" alt="Forbes Argentina" class="favicon">
+			    <a href="https://www.forbesargentina.com/" target="_blank">Forbes Argentina</a>
+			</li>
+
+			<li data-tooltip="Forbes Internacional: Revista global de referencia en negocios, finanzas, inversión, tecnología y liderazgo. Listas de millonarios y análisis económico.">
+			    <img src="https://www.google.com/s2/favicons?domain=forbes.com&sz=32" alt="Forbes" class="favicon">
+			    <a href="https://www.forbes.com/" target="_blank">Forbes</a>
+			</li>
+
+			<li data-tooltip="HardZone: Medio especializado en hardware, componentes de PC, gaming y tecnología. Reviews, análisis y noticias sobre componentes y periféricos.">
+			    <img src="https://www.google.com/s2/favicons?domain=hardzone.es&sz=32" alt="HardZone" class="favicon">
+			    <a href="https://hardzone.es/" target="_blank">HardZone</a>
+			</li>
+
+			<li data-tooltip="Search Engine Land: Fuente autorizada de noticias y análisis sobre marketing en buscadores (SEO y SEM). Cubre Google, Bing y tendencias del sector.">
+			    <img src="https://www.google.com/s2/favicons?domain=searchengineland.com&sz=32" alt="Search Engine Land" class="favicon">
+			    <a href="https://searchengineland.com/" target="_blank">Search Engine Land</a>
+			</li>
+
+			<li data-tooltip="Search Engine Journal: Recurso educativo y noticias sobre SEO, marketing en buscadores, social media y marketing digital. Guías y estudios de caso.">
+			    <img src="https://www.google.com/s2/favicons?domain=searchenginejournal.com&sz=32" alt="Search Engine Journal" class="favicon">
+			    <a href="https://www.searchenginejournal.com/" target="_blank">Search Engine Journal</a>
+			</li>
+
+			<li data-tooltip="Bloomberg Europa: Cobertura europea de noticias financieras, mercados, economía, negocios y política de la prestigiosa agencia Bloomberg.">
+			    <img src="https://www.google.com/s2/favicons?domain=bloomberg.com&sz=32" alt="Bloomberg Europa" class="favicon">
+			    <a href="https://www.bloomberg.com/europe" target="_blank">Bloomberg Europa</a>
+			</li>                   
+                        <li data-tooltip="Consulta la documentación de la Búsqueda de Google para mejorar el SEO de tu sitio">
+                            <img src="https://www.google.com/s2/favicons?domain=developers.google.com&sz=32" alt="Google Developers" class="favicon">
+                            <a href="https://developers.google.com/search/docs?hl=es" target="_blank">Documentación SEO Google</a>
+                        </li>
+			<li data-tooltip="NotebookLM Help">
+			    <img src="https://www.google.com/s2/favicons?domain=blog.google&sz=32" alt="NotebookLM" class="favicon">
+			    <a href="https://blog.google/technology/google-labs/notebooklm-studying-help/" target="_blank">NotebookLM</a>
+			</li>
+			<li data-tooltip="Notion Blog">
+			    <img src="https://www.google.com/s2/favicons?domain=notion.com&sz=32" alt="Notion Blog" class="favicon">
+			    <a href="https://www.notion.com/es-es/blog" target="_blank">Notion Blog</a>
+			</li>
+			<li data-tooltip="OpenAI Academy">
+			    <img src="https://www.google.com/s2/favicons?domain=openai.com&sz=32" alt="OpenAI Academy" class="favicon">
+			    <a href="https://academy.openai.com/" target="_blank">OpenAI Academy</a>
+			</li>
+			<li data-tooltip="NNGroup Blog">
+			    <img src="https://www.google.com/s2/favicons?domain=nngroup.com&sz=32" alt="NNGroup" class="favicon">
+			    <a href="https://www.nngroup.com/" target="_blank">NNGroup</a>
+			</li>
+			<li data-tooltip="LinkedIn Blog">
+			    <img src="https://www.google.com/s2/favicons?domain=linkedin.com&sz=32" alt="LinkedIn Blog" class="favicon">
+			    <a href="https://www.linkedin.com/blog/member" target="_blank">LinkedIn Blog</a>
+			</li>                     
+                    </ul>
+                </div>
+            </div>
+                        
+            <!-- ⏰ UTILIDADES -->
+            <div class="category">
+                <h2>⏰ Utilidades</h2>
+                <div class="category-scroll">
+                    <ul>
+                        <li data-tooltip="Reloj">
+                            <img src="https://www.google.com/s2/favicons?domain=flipclock.net&sz=32" alt="Reloj" class="favicon">
+                            <a href="https://flipclock.net/full-screen-clock.html" target="_blank">Reloj</a>
+                        </li>
+			<li data-tooltip="XE.com: Servicio líder de conversión de monedas y tipos de cambio en tiempo real. Herramientas para transferencias internacionales y gráficos históricos.">
+			    <img src="https://www.google.com/s2/favicons?domain=xe.com&sz=32" alt="XE Currency" class="favicon">
+			    <a href="https://www.xe.com/" target="_blank">XE.com</a>
+			</li>
+			<li data-tooltip="Shazam: Identifica música al instante. Simplemente graba un fragmento de cualquier canción para descubrir título, artista y letra.">
+			    <img src="https://www.google.com/s2/favicons?domain=shazam.com&sz=32" alt="Shazam" class="favicon">
+			    <a href="https://www.shazam.com/es-es" target="_blank">Shazam</a>
+			</li>
+			<li data-tooltip="Flightradar24: Rastrea vuelos en tiempo real en un mapa 3D. Información detallada de vuelos comerciales, rutas, aeronaves y aeropuertos mundialmente.">
+			    <img src="https://www.google.com/s2/favicons?domain=flightradar24.com&sz=32" alt="Flightradar24" class="favicon">
+			    <a href="https://www.flightradar24.com/11.40,-68.17/6" target="_blank">Flightradar24</a>
+			</li>                        
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>✨ Centro de Programas Profesional - Versión 3.6 con Tooltips Funcionales</p>
+        </footer>
+    </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const tooltip = document.getElementById('global-tooltip');
+    const items = document.querySelectorAll('.category li');
+    
+    items.forEach(item => {
+        item.addEventListener('mouseenter', function(e) {
+            // OBTENER EL TEXTO DEL data-tooltip
+            const tooltipText = this.getAttribute('data-tooltip');
+            
+            // Si no hay data-tooltip, usar el texto del enlace como respaldo
+            const text = tooltipText || (this.querySelector('a')?.textContent.trim() || '');
+            
+            // Posicionar el tooltip
+            const rect = this.getBoundingClientRect();
+            tooltip.textContent = text;
+            tooltip.style.left = (rect.left + rect.width/2) + 'px';
+            tooltip.style.top = (rect.top - 40) + 'px';
+            tooltip.style.opacity = '0.8';
+            tooltip.style.transform = 'translateX(-50%)';
+        });
+        
+        item.addEventListener('mouseleave', function() {
+            tooltip.style.opacity = '0';
+        });
+    });
+});
+</script>
+</body>
+</html>
